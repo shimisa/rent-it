@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import static javax.persistence.GenerationType.AUTO;
 
 /**
+ * Role class for authorization
+ *
  * @author Shimi Sadaka
  */
 
@@ -22,5 +24,9 @@ public class Role {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    private String name;
+    private RoleName name;
+
+    public String getName() {
+        return name.getValue();
+    }
 }

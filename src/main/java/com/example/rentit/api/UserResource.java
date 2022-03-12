@@ -1,24 +1,36 @@
 package com.example.rentit.api;
 
+import com.auth0.jwt.JWT;
 import com.example.rentit.userservice.domain.Role;
+import com.example.rentit.userservice.domain.RoleName;
 import com.example.rentit.userservice.domain.User;
-import com.example.rentit.userservice.repo.UserRepo;
+import com.example.rentit.userservice.security.SecurityUtil;
 import com.example.rentit.userservice.service.UserService;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
+ * Api for managing users and their authorizations in the app database
+ *
  * @author Shimi Sadaka
  * @version 1.0
  * @since 1/16/2022
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -48,11 +60,40 @@ public class UserResource {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/token/refresh")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (! SecurityUtil.isAuthorizationHeaderValid(request)) {
+            throw new RuntimeException("Refresh token is missing");
+        }
+        try {
+            String refresh_token = SecurityUtil.getTokenFromAuthHeader(request);
+            String username = SecurityUtil.verifyAndGetSubject(refresh_token);
+            User user = userService.getUser(username);
+            String access_token = JWT.create()
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                    .withIssuer(request.getRequestURL().toString())
+                    .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                    .sign(SecurityUtil.getAlgorithm());
+            /* send the tokens in the body instead of in the header*/
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", access_token);
+            tokens.put("refresh_token", refresh_token);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+
+        } catch (Exception exception) {
+            log.error("Error refreshing the token: {}", exception.getMessage());
+            SecurityUtil.handleTokenException(exception, response);
+        }
+
+
+    }
 
 
 }
     @Data
     class RoleToUserForm {
         private String userName;
-        private String roleName;
+        private RoleName roleName;
     }
