@@ -38,8 +38,8 @@ public class UserResource {
     private final UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+    public ResponseEntity<List<User>> getUsers(@RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(userService.getUsers(page));
     }
 
     @PostMapping("/user/save")

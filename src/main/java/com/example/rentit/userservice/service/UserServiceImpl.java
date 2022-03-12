@@ -7,6 +7,9 @@ import com.example.rentit.userservice.repo.UserRepo;
 import com.example.rentit.userservice.repo.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.Arrays.stream;
+
 /**
  * @author Shimi Sadaka
  * @version 1.0
@@ -25,6 +30,7 @@ import java.util.List;
  */
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
+    private static final int MAX_USERS_FOR_PAGE = 2;
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
@@ -65,11 +71,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addRoleToUser(String username, RoleName roleName) {
+    public void addRoleToUser(String username, RoleName... roleName) {
         log.info("Adding role  {} to user {}", roleName, username);
         User user = userRepo.findByUsername(username);
-        Role role = roleRepo.findByName(roleName);
-        user.getRoles().add(role);
+        stream(roleName).forEach(r -> {
+            Role role = roleRepo.findByName(r);
+            user.getRoles().add(role);
+        });
     }
 
     @Override
@@ -79,8 +87,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepo.findAll();
+    public List<User> getUsers(int page) {
+        Pageable pageable = PageRequest.of(page, MAX_USERS_FOR_PAGE);
+        return userRepo.findAll(pageable).getContent();
     }
+
+
 
 }
