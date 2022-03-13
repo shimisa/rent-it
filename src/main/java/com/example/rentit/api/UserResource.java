@@ -73,7 +73,7 @@ public class UserResource {
                     .withSubject(user.getUsername())
                     .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                     .withIssuer(request.getRequestURL().toString())
-                    .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                    .withClaim("role", user.getRole().name())
                     .sign(SecurityUtil.getAlgorithm());
             /* send the tokens in the body instead of in the header*/
             Map<String, String> tokens = new HashMap<>();

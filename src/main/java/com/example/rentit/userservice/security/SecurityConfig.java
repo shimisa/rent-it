@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.example.rentit.userservice.domain.RoleName.*;
@@ -29,7 +30,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration @EnableWebSecurity @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     /**
      * configure how to authenticate the user
@@ -53,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers(POST, "/api/user/**").hasAnyAuthority(ROLE_USER.getValue());
-        http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority(ROLE_ADMIN.getValue()); // ROLE_ADMIN has access to get all users
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/registration/**", "/api/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers(POST, "/api/user/**").hasAnyAuthority(ROLE_ADMIN.name());
+        http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority(ROLE_ADMIN.name()); // ROLE_ADMIN has access to get all users
         http.authorizeRequests().anyRequest().authenticated();
         //http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
@@ -67,4 +68,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 }

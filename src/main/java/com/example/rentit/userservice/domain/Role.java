@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -24,9 +22,10 @@ public class Role {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private RoleName name;
 
     public String getName() {
-        return name.getValue();
+        return name.name();
     }
 }

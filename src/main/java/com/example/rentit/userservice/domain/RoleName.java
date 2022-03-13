@@ -7,19 +7,8 @@ package com.example.rentit.userservice.domain;
  */
 public enum RoleName {
 
-    ROLE_USER("ROLE_USER"),
-    ROLE_ADMIN("ROLE_ADMIN"),
-    ROLE_MANAGER("ROLE_MANAGER"),
-    ROLE_SUPER_ADMIN("ROLE_SUPER_ADMIN"),
-    ;
-
-    private String value;
-
-    RoleName(String roleName) {
-        this.value = roleName;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_MANAGER,
+    ROLE_SUPER_ADMIN,
 }

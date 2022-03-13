@@ -36,16 +36,17 @@ public class RentItApplication {
         return args -> {
 
             /* inserting users data into DB for testing */
-            userService.saveRole(new Role(null, ROLE_USER));
-            userService.saveRole(new Role(null, ROLE_ADMIN));
+//            userService.saveRole(new Role(null, ROLE_USER));
+//            userService.saveRole(new Role(null, ROLE_ADMIN));
 
-            userService.saveUser(new User(null, "Jon Travolta", "john", "1234", new ArrayList<>()));
-            userService.saveUser(new User(null, "Will Smith", "will", "1234", new ArrayList<>()));
-            userService.saveUser(new User(null, "Jim Carry", "jim", "1234", new ArrayList<>()));
+         //   userService.saveUser(new User("Jon Travolta", "john", "sh.sadaka@gmail.com","1234", ROLE_ADMIN));
 
-            userService.addRoleToUser("john", ROLE_USER);
-            userService.addRoleToUser("will", ROLE_USER);
-            userService.addRoleToUser("jim", ROLE_ADMIN);
+//            userService.saveUser(new User(null, "Will Smith", "will", "1234", new ArrayList<>()));
+//            userService.saveUser(new User(null, "Jim Carry", "jim", "1234", new ArrayList<>()));
+
+//            userService.addRoleToUser("john", ROLE_USER);
+//            userService.addRoleToUser("will", ROLE_USER);
+//            userService.addRoleToUser("jim", ROLE_ADMIN);
         };
     }
 }

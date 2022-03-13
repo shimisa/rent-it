@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Shimi Sadaka
@@ -13,7 +14,8 @@ import java.util.List;
  * @since 1/16/2022
  */
 public interface UserRepo extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+    //Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     List<User> findFirst1ByOrderByIdDesc();
     Page<User> findAll(Pageable pageable);
 }
