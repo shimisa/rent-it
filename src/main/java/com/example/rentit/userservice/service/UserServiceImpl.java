@@ -3,6 +3,7 @@ package com.example.rentit.userservice.service;
 import com.example.rentit.userservice.domain.Role;
 import com.example.rentit.userservice.domain.RoleName;
 import com.example.rentit.userservice.domain.User;
+import com.example.rentit.userservice.email.EmailSender;
 import com.example.rentit.userservice.registration.token.ConfirmationToken;
 import com.example.rentit.userservice.registration.token.ConfirmationTokenService;
 import com.example.rentit.userservice.repo.UserRepo;
@@ -25,6 +26,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.rentit.userservice.registration.RegistrationService.CONFIRMATION_LINK;
+import static com.example.rentit.userservice.registration.token.ConfirmationTokenService.CONFIRMATION_TOKEN_EXPIRY_TIME;
+
 
 /**
  * @author Shimi Sadaka
@@ -34,11 +38,11 @@ import java.util.UUID;
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
     private static final int MAX_USERS_FOR_PAGE = 2;
-    private static final int CONFIRMATION_TOKEN_EXPIRY_TIME = 15;
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
+    private final EmailSender emailSender;
 
     /**
      * configured the authorities of the loaded user
@@ -95,13 +99,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public String signUpUser(User user) {
-        boolean userExists = userRepo.findByEmail(user.getEmail()).isPresent();
-        if (userExists) {
-            log.error("email already taken");
-            throw new IllegalStateException("email already taken");
-        }
-        saveUser(user);
-
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
@@ -109,10 +106,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 LocalDateTime.now().plusMinutes(CONFIRMATION_TOKEN_EXPIRY_TIME),
                 user
         );
+        boolean emailExists = userRepo.findByEmail(user.getEmail()).isPresent();
+        if (emailExists) {
+            User existingUser = userRepo.findByEmail(user.getEmail()).get();
+            if (user.equals(existingUser)) { // check if user exists
+                if (!user.isEnabled()) { // if exists and not enabled - send existing confirmation email with new expiry time
+                    ConfirmationToken existingConfirmationToken = confirmationTokenService.getTokenByUser(existingUser).get();
+                    existingConfirmationToken.setExpiresAt(LocalDateTime.now().plusMinutes(CONFIRMATION_TOKEN_EXPIRY_TIME));
+                    String existingToken = existingConfirmationToken.getToken();
+                    confirmationTokenService.saveConfirmationToken(existingConfirmationToken);
+                    emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + existingToken));
+                    return existingToken;
+                } else {
+                    throw new IllegalStateException("User is already registered");
+                }
+            } else {
+                log.error("email already taken");
+                throw new IllegalStateException("email already taken");
+            }
+
+        }
+        saveUser(user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        // TODO: send email
-
+        emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + token));
         return token;
     }
 
@@ -122,6 +138,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 () -> new IllegalStateException("User not found")
         );
         user.setEnabled(true);
+        userRepo.save(user);
     }
 
 

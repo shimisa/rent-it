@@ -1,6 +1,7 @@
 package com.example.rentit.userservice.domain;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -19,7 +21,6 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @Data
 @Entity
 @NoArgsConstructor
@@ -78,4 +79,16 @@ public class User implements UserDetails {
         return enabled;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return  (Objects.equals(firstName, user.getFirstName())) && (Objects.equals(lastName, user.getLastName())) && (Objects.equals(role, user.getRole()));
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

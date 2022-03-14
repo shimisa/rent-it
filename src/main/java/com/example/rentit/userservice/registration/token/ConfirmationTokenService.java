@@ -16,6 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
+    public static final int CONFIRMATION_TOKEN_EXPIRY_TIME = 15;
 
     public void saveConfirmationToken(ConfirmationToken confirmationToken){
         confirmationTokenRepository.save(confirmationToken);
@@ -23,6 +24,12 @@ public class ConfirmationTokenService {
 
     public Optional<ConfirmationToken> getToken(String token) {
         return confirmationTokenRepository.findByToken(token);
+    }
+    public Optional<ConfirmationToken> getTokenById(long id) {
+        return confirmationTokenRepository.findById(id);
+    }
+    public Optional<ConfirmationToken> getTokenByUser(User user) {
+        return confirmationTokenRepository.findByUser(user);
     }
 
     public void setConfirmedAt(String token) {

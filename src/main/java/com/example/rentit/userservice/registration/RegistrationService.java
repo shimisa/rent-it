@@ -24,6 +24,7 @@ public class RegistrationService {
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    public static final String CONFIRMATION_LINK = "http://localhost:8080/api/registration/confirm?token=";
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -39,8 +40,8 @@ public class RegistrationService {
                         RoleName.ROLE_USER
                 )
         );
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
+//        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+//        emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
         return token;
     }
 
@@ -131,7 +132,4 @@ public class RegistrationService {
 //                "</div></div>";
 //    }
 
-    private String buildEmail(String name, String link) {
-        return String.format("Hello %s, \n Please confirm your email in the link below :) \n %s", name, link);
-    }
 }

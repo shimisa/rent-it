@@ -82,6 +82,8 @@ public class EmailService implements EmailSender {
         }
     }
 
-
+    public String buildEmail(String name, String link) {
+        return String.format("Hello %s, \n Please confirm your email in the link below :) \n %s", name, link);
+    }
 
 }
