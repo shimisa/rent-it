@@ -55,13 +55,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/registration/**", "/api/token/refresh/**").permitAll();
+        /* Vehicle API */
+        http.authorizeRequests().antMatchers(GET, "/api/vehicles").hasAnyAuthority(ROLE_ADMIN.name());
+        http.authorizeRequests().antMatchers(POST, "/api/vehicle/**").hasAnyAuthority(ROLE_USER.name());
+        http.authorizeRequests().antMatchers(GET, "/api/vehicle/**").hasAnyAuthority(ROLE_USER.name());
+        /* Post API */
+        http.authorizeRequests().antMatchers(GET, "/api/post/posts").permitAll();
+        http.authorizeRequests().antMatchers(GET, "/api/post/**").hasAnyAuthority(ROLE_USER.name());
+        http.authorizeRequests().antMatchers(POST, "/api/post/**").hasAnyAuthority(ROLE_USER.name());
+        /* User API */
         http.authorizeRequests().antMatchers(POST, "/api/user/**").hasAnyAuthority(ROLE_ADMIN.name());
         http.authorizeRequests().antMatchers(GET, "/api/users").hasAnyAuthority(ROLE_ADMIN.name()); // ROLE_ADMIN has access to get all users
         http.authorizeRequests().antMatchers(POST, "/api//role/save", "/api/role/addtouser").hasAnyAuthority(ROLE_SUPER_ADMIN.name());
         http.authorizeRequests().anyRequest().authenticated();
+        /* add the authorization filter */
         //http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class); // add the authorization filter
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

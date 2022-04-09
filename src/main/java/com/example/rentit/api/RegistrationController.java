@@ -1,5 +1,7 @@
-package com.example.rentit.userservice.registration;
+package com.example.rentit.api;
 
+import com.example.rentit.userservice.registration.RegistrationRequest;
+import com.example.rentit.userservice.registration.RegistrationService;
 import lombok.*;
 import org.springframework.web.bind.annotation.*;
 

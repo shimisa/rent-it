@@ -37,7 +37,7 @@ import static com.example.rentit.userservice.registration.token.ConfirmationToke
  */
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private static final int MAX_USERS_FOR_PAGE = 2;
+    private static final int MAX_USERS_FOR_PAGE = 20;
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 });
 
         log.info("User found in the database: {}", email);
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+//        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
     }
 
     @Override
@@ -70,11 +70,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepo.save(user);
     }
 
-    @Override
-    public Role saveRole(Role role) {
-        log.info("Saving new role {} to the database", role.getName());
-        return roleRepo.save(role);
-    }
+//    @Override
+//    public Role saveRole(Role role) {
+//        log.info("Saving new role {} to the database", role.getName());
+//        return roleRepo.save(role);
+//    }
 
     @Override
     public void addRoleToUser(String email, RoleName roleName) {

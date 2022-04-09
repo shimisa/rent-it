@@ -7,9 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -48,10 +46,23 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    /**
+     * Add to All the Authorities beneath this role include this role
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        RoleName.stream().filter(
+                roleName ->
+                        roleName.getVal() <= this.getRole().getVal())
+                .forEach(
+                role -> {
+                        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+                        authorities.add(authority);
+                }
+        );
+        return authorities;
     }
 
     @Override
