@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bind.annotation.Origin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @version 1.0
  * @since 1/16/2022
  */
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 @RestController
 @RequestMapping("/api")

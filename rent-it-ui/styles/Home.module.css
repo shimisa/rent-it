@@ -1,0 +1,25 @@
+.layout {
+  background: rgb(155, 155, 155);
+  width: 80vw;
+  padding: 1vw 1vw 1vw 1vw;
+  margin: auto;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.navLeftCol {
+}
+.navRightCol {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popoutForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,7 +1,10 @@
 package com.example.rentit.core.post.service;
 
+import com.example.rentit.core.feedback.domain.RatingOfRental;
+import com.example.rentit.core.feedback.repo.RatingOfRentalRepo;
 import com.example.rentit.core.post.domain.Post;
 import com.example.rentit.core.post.domain.PostRequest;
+import com.example.rentit.core.post.domain.PostResponse;
 import com.example.rentit.core.post.repo.PostRepo;
 import com.example.rentit.core.vehicle.domain.Vehicle;
 import com.example.rentit.core.vehicle.repo.VehicleRepo;
@@ -14,6 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Shimi Sadaka
@@ -27,6 +33,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepo postRepo;
     private final VehicleRepo vehicleRepo;
+    private final RatingOfRentalRepo ratingOfRentalRepo;
     private static final int MAX_POSTS_PER_PAGE = 20;
     private static final int POST_PERIOD_DAYS = 30;
 
@@ -58,7 +65,7 @@ public class PostServiceImpl implements PostService {
         );
         return postRepo.save(post);
     }
-
+    // TODO: to return PostResponse instead of Post
     @Override
     public Post getPostByPostId(long postId) {
         log.info("Fetching post id: {}", postId);
@@ -84,9 +91,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPosts(int page) {
+    public List<PostResponse> getAllPosts(int page) {
         log.info("Fetching all posts from page {}", page);
         Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
-        return postRepo.findAll(pageable).getContent();
+        return postRepo.findAll(pageable).getContent().stream().map(post -> {
+            RatingOfRental ratingOfRental = ratingOfRentalRepo.findByCarRentalId(post.getVehicle().getOwner().getId()).orElse(new RatingOfRental());
+            return new PostResponse(
+                    post.getPostId(), post.getPostedAt(),
+                    post.getHeader(), post.getDescription(),
+                    post.getFromDate(), post.getTillDate(),
+                    post.getVehicle().getTypeOfVehicle(),
+                    post.getVehicle().getModel(),
+                    post.getVehicle().getYear(),
+                    post.getVehicle().getGearType(),
+                    post.getVehicle().getEngineType(),
+                    post.getVehicle().getDescription(),
+                    post.getVehicle().getCarAccessories(),
+                    post.getVehicle().getOwner().getFirstName(),
+                    ratingOfRental);
+        }).collect(toList());
     }
+
+
 }

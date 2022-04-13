@@ -2,6 +2,7 @@ package com.example.rentit.api;
 
 import com.example.rentit.core.post.domain.Post;
 import com.example.rentit.core.post.domain.PostRequest;
+import com.example.rentit.core.post.domain.PostResponse;
 import com.example.rentit.core.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getPosts(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<List<PostResponse>> getPosts(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(postService.getAllPosts(page));
     }
 

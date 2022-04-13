@@ -2,6 +2,7 @@ package com.example.rentit.core.post.service;
 
 import com.example.rentit.core.post.domain.Post;
 import com.example.rentit.core.post.domain.PostRequest;
+import com.example.rentit.core.post.domain.PostResponse;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface PostService {
     Post getPostByVehicleId(long vehicleId);
     Post getPostByVehicleOwnerId(long vehicleOwnerId);
     Post getPostByVehicleOwnerUsername(String vehicleOwnerUsername);
-    List<Post> getAllPosts(int page);
+    List<PostResponse> getAllPosts(int page);
 }

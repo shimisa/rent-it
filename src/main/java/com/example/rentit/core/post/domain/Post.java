@@ -25,15 +25,15 @@ public class Post {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long postId;
-    LocalDateTime postedAt = LocalDateTime.now();
+    private LocalDateTime postedAt = LocalDateTime.now();
 
     @Column(length = 20)
-    String header;
+    private String header;
     @Column(length = 100)
-    String description;
+    private String description;
 
-    LocalDateTime fromDate;
-    LocalDateTime tillDate;
+    private LocalDateTime fromDate;
+    private LocalDateTime tillDate;
 
 
     @OneToOne
