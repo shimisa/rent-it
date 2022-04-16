@@ -5,7 +5,6 @@ import { Button } from "@mui/material";
 import {
   encode,
   login,
-  AuthUserFailed,
   AuthUserSuccess,
 } from "../services/api";
 import { useUser } from "../context/Auth";

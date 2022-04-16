@@ -11,8 +11,6 @@
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
-.navLeftCol {
-}
 .navRightCol {
   display: flex;
   justify-content: space-between;
@@ -22,4 +20,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.post {
+  background: rgb(56, 103, 125);
+  display: flex;
+  flex-direction: column;
 }

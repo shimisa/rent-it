@@ -5,12 +5,14 @@ import styles from "../../styles/Home.module.css";
 import { Button, Typography } from "@mui/material";
 import Popout from "./Popout";
 import { useUser } from "../context/Auth";
+import { useRouter  } from "next/router";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const [isLoginPopOpen, setIsLoginPopOpen] = useState<boolean>(false);
   const [isRegisterPopOpen, setIsRegisterPopOpen] = useState<boolean>(false);
+  const router = useRouter()
   const { user } = useUser();
 
   const loginOpenClick = () => {
@@ -39,7 +41,10 @@ const Navbar = (props: Props) => {
         </Link>
       </div>
       {user ? (
-        user.email
+        <span className={styles.navRightCol}>
+          <Button onClick={() => {router.push('/cars')}}>My Cars</Button>
+          <h4>{user.email}</h4>
+        </span>
       ) : (
         <div className={styles.navRightCol}>
           <Button onClick={loginOpenClick}>Login</Button>

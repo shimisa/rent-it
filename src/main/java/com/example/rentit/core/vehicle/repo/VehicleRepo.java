@@ -16,8 +16,9 @@ import java.util.Optional;
 public interface VehicleRepo extends JpaRepository<Vehicle, Long> {
     Optional<Vehicle> findByLicenseNo(long licenseNo);
     Optional<Vehicle> findById(long id);
-    Optional<Vehicle> findByOwnerEmail(String ownerUsername);
+    //Optional<Vehicle> findByOwnerEmail(String ownerUsername);
     Page<Vehicle> findByTypeOfVehicle(TypeOfVehicle typeOfVehicle, Pageable pageable);
+    Page<Vehicle> findByOwnerEmail(String email, Pageable pageable);
     Page<Vehicle> findByYear(int year, Pageable pageable);
     Page<Vehicle> findAll(Pageable pageable);
 }

@@ -21,6 +21,7 @@ public interface VehicleService {
     List<Vehicle> getAllVehicles(int page);
     List<Vehicle> getVehiclesByYear(int year, int page);
     List<Vehicle> getVehiclesByType(TypeOfVehicle typeOfVehicle, int page);
+    List<Vehicle> getVehiclesByOwnerEmail(String email, int page);
 
 
 }

@@ -103,4 +103,11 @@ public class VehicleServiceImpl implements VehicleService {
         Pageable pageable = PageRequest.of(page, MAX_VEHICLES_PER_PAGE);
         return vehicleRepo.findByTypeOfVehicle(typeOfVehicle, pageable).getContent();
     }
+
+    @Override
+    public List<Vehicle> getVehiclesByOwnerEmail(String email, int page) {
+        log.info("Fetching vehicle by Owner Email from page {}", page);
+        Pageable pageable = PageRequest.of(page, MAX_VEHICLES_PER_PAGE);
+        return vehicleRepo.findByOwnerEmail(email, pageable).getContent();
+    }
 }

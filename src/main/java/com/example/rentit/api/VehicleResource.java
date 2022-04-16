@@ -27,9 +27,13 @@ import java.util.Set;
 public class VehicleResource {
     private final VehicleService vehicleService;
 
-    @GetMapping("/vehicles")
-    public ResponseEntity<List<Vehicle>> getAllVehicles(@RequestParam(defaultValue = "0") int page) {
-        return ResponseEntity.ok().body(vehicleService.getAllVehicles(page));
+//    @GetMapping("/vehicles")
+//    public ResponseEntity<List<Vehicle>> getAllVehicles(@RequestParam(defaultValue = "0") int page) {
+//        return ResponseEntity.ok().body(vehicleService.getAllVehicles(page));
+//    }
+    @GetMapping("/vehiclesofuser")
+    public ResponseEntity<List<Vehicle>> getAllVehicles(@RequestParam String email, @RequestParam(defaultValue = "0" ) int page) {
+        return ResponseEntity.ok().body(vehicleService.getVehiclesByOwnerEmail(email ,page));
     }
 
     @PostMapping("/vehicle/save")

@@ -4,12 +4,49 @@ export interface AuthUserSuccess {
   refresh_token: string;
 }
 
-export interface AuthUserFailed {
-  fail: string;
-}
 export interface User {
   username: string;
   password: string;
+}
+export interface Vehicle {
+  licenseNo: number;
+  typeOfVehicle: string;
+  model: string;
+  year: number;
+  gearType: string;
+  engineType: string;
+  description: string;
+  carAccessories: string[];
+}
+
+export interface Post {
+  carAccessories: string[];
+  carDescription: string;
+  description: string;
+  engineType: string;
+  fromDate: string;
+  gearType: string;
+  header: string;
+  model: string;
+  postId: number;
+  postedAt: string;
+  ratingOfRental: {
+    avg_carAsDescribed: number;
+    avg_communication: number;
+    avg_deliveryTime: number;
+    avg_wouldRecommendToFriend: number;
+    carRental: number;
+    id: number;
+    numOfNegatives: number;
+    numOfNeutrals: number;
+    numOfPositives: number;
+    numOfVotes: number;
+    percentage_positiveFeedback: number;
+  };
+  rentalFirstName: string;
+  tillDate: string;
+  typeOfVehicle: string;
+  year: number;
 }
 
 export const encode = (msgDetails: User): string => {
@@ -41,6 +78,7 @@ export const login = async (msg: string) => {
     return { fail: "Incorect user name or password" };
   }
 };
+
 export const register = async ({
   firstName,
   lastName,
@@ -71,7 +109,8 @@ export const register = async ({
   });
   return res;
 };
-export const registerConfirm = async (token : string ) => {
+
+export const registerConfirm = async (token: string) => {
   const res = await fetch(
     `http://localhost:8080/api/registration/confirm?token=${token}`,
     {
@@ -84,4 +123,21 @@ export const registerConfirm = async (token : string ) => {
     }
   );
   return res;
+};
+
+export const getUserCars = async (email: string, page: number, token: string) => {
+  const res = await fetch(
+    `http://localhost:8080/api/vehiclesofuser?email=${email}&page=${page}`,
+    {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Authorization": "Bearer " + token// access token 
+        // 'Content-Type': 'application/x-www-form-urlencoded'
+      },
+    }
+  );
+  const data = await res.json();
+  return data;
 };
