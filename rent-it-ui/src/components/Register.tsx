@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import styles from "../../styles/Home.module.css";
 import { Button } from "@mui/material";
+import { register, registerConfirm } from "../services/api";
 
 type Props = {
   handleClose: Function;
@@ -17,17 +18,7 @@ const Register = ({ handleClose }: Props) => {
   const [msg, setMsg] = useState<string>("");
 
   const handleConfirmation = async () => {
-    const res = await fetch(
-      `http://localhost:8080/api/registration/confirm?token=${token}`,
-      {
-        method: "GET", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded'
-        },
-      }
-    );
+    const res = await registerConfirm(token)
     if (res.status == 500) {
       const data = await res.json();
 
@@ -41,20 +32,12 @@ const Register = ({ handleClose }: Props) => {
   };
 
   const handleRegister = async () => {
-    const res = await fetch("http://localhost:8080/api/registration", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: JSON.stringify({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        verifiedPassword: verifiedPassword,
-      }),
+    const res = await register({
+      firstName,
+      lastName,
+      email,
+      password,
+      verifiedPassword,
     });
     if (res.status == 500) {
       const data = await res.json();
