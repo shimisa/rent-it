@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import styles from "../../styles/Home.module.css";
 import { Button } from "@mui/material";
+import {
+  encode,
+  login,
+  AuthUserFailed,
+  AuthUserSuccess,
+} from "../services/api";
+import { useUser } from "../context/Auth";
 
 type Props = {};
 
@@ -9,38 +16,31 @@ const Login = (props: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userNotFound, setuserNotFound] = useState<string>("");
+  const [user, setUser] = useState<AuthUserSuccess | null>(null);
+  const { userUpdate } = useUser();
 
   const handleLogin = async () => {
-    var details = {
+    const details: { username: string; password: string } = {
       username: email,
       password: password,
     };
 
-    var formBody = [];
-    let property: keyof typeof details;
-    for (property in details) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    var strFormBody = formBody.join("&");
+    const handleLoginRes = (loginRes: any) => {
+      if (loginRes.fail) {
+        return setuserNotFound(loginRes.fail);
+      }
+      setUser(loginRes);
+    };
 
-    try {
-      const res = await fetch("http://localhost:8080/api/login", {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          // "Content-Type": "application/json",
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: strFormBody,
-      });
-      const data = await res.json();
-      console.log(data);
-    } catch (err: any) {
-      setuserNotFound("Incorect user name or password")
-    }
+    const loginRes = await login(encode(details));
+    handleLoginRes(loginRes);
   };
+
+  useEffect(() => {
+    if (user) {
+      userUpdate(user);
+    }
+  }, [user, userUpdate]);
 
   return (
     <div className={styles.popoutForm}>
@@ -62,7 +62,9 @@ const Login = (props: Props) => {
         label="Password"
         variant="standard"
       />
-      <p><small>{userNotFound}</small> </p>
+      <p>
+        <small>{userNotFound}</small>{" "}
+      </p>
       <Button onClick={handleLogin}>Login</Button>
     </div>
   );

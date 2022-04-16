@@ -53,7 +53,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         log.info("Username is: {}", username);
-        //log.info("Password is: {}", password);
+        log.info("Password is: {}", password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -90,6 +90,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
+        tokens.put("first_name", user.getUsername());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
         log.info("The user: {} logged in", user.getUsername());
