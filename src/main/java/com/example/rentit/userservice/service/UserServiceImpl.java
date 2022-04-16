@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     existingConfirmationToken.setExpiresAt(LocalDateTime.now().plusMinutes(CONFIRMATION_TOKEN_EXPIRY_TIME));
                     String existingToken = existingConfirmationToken.getToken();
                     confirmationTokenService.saveConfirmationToken(existingConfirmationToken);
-                    emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + existingToken));
+                    emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(),existingToken));
                     return new RegistrationResponse(201, existingToken);
                 } else {
                     throw new IllegalStateException("User is already registered");
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         saveUser(user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + token));
+        emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), token));
         return new RegistrationResponse(201, token);
     }
 

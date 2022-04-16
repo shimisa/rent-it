@@ -29,7 +29,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       <DialogTitle>
         {(isLoginPopOpen && "Login") || (isRegisterPopOpen && "Register")}
         {isLoginPopOpen && <Login handleClose={handleClose} />}
-        {isRegisterPopOpen && <Register />}
+        {isRegisterPopOpen && <Register  handleClose={handleClose} />}
       </DialogTitle>
     </Dialog>
   );

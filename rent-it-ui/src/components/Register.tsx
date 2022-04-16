@@ -3,15 +3,42 @@ import TextField from "@mui/material/TextField";
 import styles from "../../styles/Home.module.css";
 import { Button } from "@mui/material";
 
-type Props = {};
+type Props = {
+  handleClose: Function;
+};
 
-const Register = (props: Props) => {
+const Register = ({ handleClose }: Props) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [verifiedPassword, setVerifiedPassword] = useState<string>("");
+  const [token, setToken] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
+
+  const handleConfirmation = async () => {
+    const res = await fetch(
+      `http://localhost:8080/api/registration/confirm?token=${token}`,
+      {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    );
+    if (res.status == 500) {
+      const data = await res.json();
+
+      console.log(data.message);
+      setMsg(data.message);
+    }
+    if (res.status == 200) {
+      setMsg("Confirmed");
+      handleClose();
+    }
+  };
 
   const handleRegister = async () => {
     const res = await fetch("http://localhost:8080/api/registration", {
@@ -90,6 +117,20 @@ const Register = (props: Props) => {
       <p>
         <small>{msg}</small>
       </p>
+      {msg === "Email confirmation sent" && (
+        <>
+          <TextField
+            value={token}
+            onChange={(e) => {
+              setToken(e.target.value);
+            }}
+            type="text"
+            label="Token"
+            variant="standard"
+          />
+          <Button onClick={handleConfirmation}>Confirm email</Button>
+        </>
+      )}
       <Button onClick={handleRegister}>Register</Button>
     </div>
   );
