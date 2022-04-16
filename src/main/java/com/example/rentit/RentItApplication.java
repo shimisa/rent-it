@@ -39,7 +39,7 @@ public class RentItApplication {
 //            userService.saveRole(new Role(null, ROLE_USER));
 //            userService.saveRole(new Role(null, ROLE_ADMIN));
 
-            userService.saveUser(new User("Shimi", "Sadaka", "sh.sadaka@gmail.com","1234", ROLE_SUPER_ADMIN));
+//            userService.saveUser(new User("Shimi", "Sadaka", "sh.sadaka@gmail.com","1234", ROLE_SUPER_ADMIN));
 
 //            userService.saveUser(new User(null, "Will Smith", "will", "1234", new ArrayList<>()));
 //            userService.saveUser(new User(null, "Jim Carry", "jim", "1234", new ArrayList<>()));

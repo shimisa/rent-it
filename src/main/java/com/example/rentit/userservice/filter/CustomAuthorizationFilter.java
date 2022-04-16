@@ -28,7 +28,7 @@ import static java.util.Arrays.stream;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/api/login") || request.getServletPath().matches("/api/registration.*") || request.getServletPath().equals("/api/token/refresh")){
+        if (request.getServletPath().equals("/api/login") || request.getServletPath().matches("/api/registration(.*)") || request.getServletPath().equals("/api/token/refresh")){
             filterChain.doFilter(request, response); // not doing anything in case of these paths
         } else { // else verify the token validity and the authorities
             if (! SecurityUtil.isAuthorizationHeaderValid(request)) {

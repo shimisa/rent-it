@@ -8,6 +8,7 @@ type Props = {};
 const Login = (props: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [userNotFound, setuserNotFound] = useState<string>("");
 
   const handleLogin = async () => {
     var details = {
@@ -24,18 +25,21 @@ const Login = (props: Props) => {
     }
     var strFormBody = formBody.join("&");
 
-    const res = await fetch("http://localhost:8080/api/login", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        // "Content-Type": "application/json",
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-         body: strFormBody, 
-    });
-
-    const data = await res.json();
-    console.log(data);
+    try {
+      const res = await fetch("http://localhost:8080/api/login", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          // "Content-Type": "application/json",
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: strFormBody,
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (err: any) {
+      setuserNotFound("Incorect user name or password")
+    }
   };
 
   return (
@@ -58,6 +62,7 @@ const Login = (props: Props) => {
         label="Password"
         variant="standard"
       />
+      <p><small>{userNotFound}</small> </p>
       <Button onClick={handleLogin}>Login</Button>
     </div>
   );

@@ -25,13 +25,21 @@ public class RegistrationService {
     private ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     public static final String CONFIRMATION_LINK = "http://localhost:8080/api/registration/confirm?token=";
+//    public static final String CONFIRMATION_LINK = "http://localhost:3000/confirm?token=";
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");
         }
-        String token = userService.signUpUser(
+        if (!request.getPassword().equals(request.getVerifiedPassword())) {
+            throw new IllegalStateException("The password is not equal to verified password");
+        }
+        if (request.getPassword().isEmpty()) {
+            throw new IllegalStateException("The password is empty");
+        }
+
+        return userService.signUpUser(
                 new User(
                         request.getFirstName(),
                         request.getLastName(),
@@ -40,9 +48,6 @@ public class RegistrationService {
                         RoleName.ROLE_USER
                 )
         );
-//        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-//        emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
-        return token;
     }
 
     @Transactional

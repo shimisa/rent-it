@@ -3,6 +3,7 @@ package com.example.rentit.api;
 import com.example.rentit.userservice.registration.RegistrationRequest;
 import com.example.rentit.userservice.registration.RegistrationService;
 import lombok.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,7 +23,7 @@ public class RegistrationController {
     }
 
     @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token){
-        return registrationService.confirmToken(token);
+    public ResponseEntity<String> confirm(@RequestParam("token") String token){
+        return ResponseEntity.ok().body(registrationService.confirmToken(token));
     }
 }

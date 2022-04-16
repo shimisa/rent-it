@@ -47,8 +47,8 @@ public class EmailService implements EmailSender {
     @Override
     @Async
     public void send(String to, String email) {
-        final String username = "";
-        final String password = "";
+        final String username = "sh.sadaka@gmail.com";
+        final String password = "sbnvuzlznudmfdyy";
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");

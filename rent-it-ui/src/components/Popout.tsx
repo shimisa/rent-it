@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import Login from "./Login";
+import Register from "./Register";
 
 const emails = ["username@gmail.com", "user02@gmail.com"];
 
@@ -28,6 +29,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       <DialogTitle>
         {(isLoginPopOpen && "Login") || (isRegisterPopOpen && "Register")}
         {isLoginPopOpen && <Login />}
+        {isRegisterPopOpen && <Register />}
       </DialogTitle>
     </Dialog>
   );
