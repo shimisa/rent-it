@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import styles from "../../styles/Home.module.css";
 import { Button } from "@mui/material";
@@ -10,9 +10,11 @@ import {
 } from "../services/api";
 import { useUser } from "../context/Auth";
 
-type Props = {};
+type Props = {
+  handleClose: Function;
+};
 
-const Login = (props: Props) => {
+const Login = ({ handleClose }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userNotFound, setuserNotFound] = useState<string>("");
@@ -39,8 +41,9 @@ const Login = (props: Props) => {
   useEffect(() => {
     if (user) {
       userUpdate(user);
+      handleClose();
     }
-  }, [user, userUpdate]);
+  }, [handleClose, user, userUpdate]);
 
   return (
     <div className={styles.popoutForm}>
@@ -70,4 +73,4 @@ const Login = (props: Props) => {
   );
 };
 
-export default Login;
+export default memo(Login);

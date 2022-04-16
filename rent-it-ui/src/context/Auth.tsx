@@ -10,7 +10,7 @@ export const UserUpdateContext = createContext<Function>(() => {});
 
 export const useUser = () => {
   return {
-    user: useContext(UserUpdateContext),
+    user: useContext(UserContext),
     userUpdate: useContext(UserUpdateContext),
   };
 };

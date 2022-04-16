@@ -11,7 +11,7 @@ const Register = (props: Props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [verifiedPassword, setVerifiedPassword] = useState<string>("");
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [msg, setMsg] = useState<string>("");
 
   const handleRegister = async () => {
     const res = await fetch("http://localhost:8080/api/registration", {
@@ -29,11 +29,14 @@ const Register = (props: Props) => {
         verifiedPassword: verifiedPassword,
       }),
     });
-    const data = await res.json();
-    console.log(data);
-    if (data.status == 500) {
+    if (res.status == 500) {
+      const data = await res.json();
+
       console.log(data.message);
-      setErrorMsg(data.message);
+      setMsg(data.message);
+    }
+    if (res.status == 201) {
+      setMsg("Email confirmation sent");
     }
   };
 
@@ -85,7 +88,7 @@ const Register = (props: Props) => {
         variant="standard"
       />
       <p>
-        <small>{errorMsg}</small>
+        <small>{msg}</small>
       </p>
       <Button onClick={handleRegister}>Register</Button>
     </div>

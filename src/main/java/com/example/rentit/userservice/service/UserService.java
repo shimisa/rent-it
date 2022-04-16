@@ -3,6 +3,7 @@ package com.example.rentit.userservice.service;
 import com.example.rentit.userservice.domain.Role;
 import com.example.rentit.userservice.domain.RoleName;
 import com.example.rentit.userservice.domain.User;
+import com.example.rentit.userservice.registration.RegistrationResponse;
 
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface UserService {
     void addRoleToUser(String username, RoleName roleName);
     User getUser(String username);
     List<User> getUsers(int page);
-    String signUpUser(User user);
+    RegistrationResponse signUpUser(User user);
     void enableUser(String email);
 }

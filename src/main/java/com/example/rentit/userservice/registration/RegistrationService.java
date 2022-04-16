@@ -27,7 +27,7 @@ public class RegistrationService {
     public static final String CONFIRMATION_LINK = "http://localhost:8080/api/registration/confirm?token=";
 //    public static final String CONFIRMATION_LINK = "http://localhost:3000/confirm?token=";
 
-    public String register(RegistrationRequest request) {
+    public RegistrationResponse register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");

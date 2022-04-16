@@ -4,6 +4,7 @@ import com.example.rentit.userservice.domain.Role;
 import com.example.rentit.userservice.domain.RoleName;
 import com.example.rentit.userservice.domain.User;
 import com.example.rentit.userservice.email.EmailSender;
+import com.example.rentit.userservice.registration.RegistrationResponse;
 import com.example.rentit.userservice.registration.token.ConfirmationToken;
 import com.example.rentit.userservice.registration.token.ConfirmationTokenService;
 import com.example.rentit.userservice.repo.UserRepo;
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String signUpUser(User user) {
+    public RegistrationResponse signUpUser(User user) {
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     String existingToken = existingConfirmationToken.getToken();
                     confirmationTokenService.saveConfirmationToken(existingConfirmationToken);
                     emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + existingToken));
-                    return existingToken;
+                    return new RegistrationResponse(201, existingToken);
                 } else {
                     throw new IllegalStateException("User is already registered");
                 }
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         saveUser(user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         emailSender.send(user.getEmail(), emailSender.buildEmail(user.getFirstName(), CONFIRMATION_LINK + token));
-        return token;
+        return new RegistrationResponse(201, token);
     }
 
     @Override

@@ -4,12 +4,14 @@ import React, { useCallback, useState } from "react";
 import styles from "../../styles/Home.module.css";
 import { Button, Typography } from "@mui/material";
 import Popout from "./Popout";
+import { useUser } from "../context/Auth";
 
 type Props = {};
 
 const Navbar = (props: Props) => {
   const [isLoginPopOpen, setIsLoginPopOpen] = useState<boolean>(false);
   const [isRegisterPopOpen, setIsRegisterPopOpen] = useState<boolean>(false);
+  const { user } = useUser();
 
   const loginOpenClick = () => {
     setIsLoginPopOpen(true);
@@ -36,10 +38,14 @@ const Navbar = (props: Props) => {
           </a>
         </Link>
       </div>
-      <div className={styles.navRightCol}>
-        <Button onClick={loginOpenClick}>Login</Button>
-        <Button onClick={registerOpenClick}>Register</Button>
-      </div>
+      {user ? (
+        user.email
+      ) : (
+        <div className={styles.navRightCol}>
+          <Button onClick={loginOpenClick}>Login</Button>
+          <Button onClick={registerOpenClick}>Register</Button>
+        </div>
+      )}
       {(isLoginPopOpen || isRegisterPopOpen) && (
         <Popout
           loginCloseClick={loginCloseClick}

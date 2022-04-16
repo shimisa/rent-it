@@ -20,15 +20,15 @@ function SimpleDialog(props: SimpleDialogProps) {
   const { onClose, selectedValue, open, isLoginPopOpen, isRegisterPopOpen } =
     props;
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose(selectedValue);
-  };
+  }, [onClose, selectedValue]);
 
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>
         {(isLoginPopOpen && "Login") || (isRegisterPopOpen && "Register")}
-        {isLoginPopOpen && <Login />}
+        {isLoginPopOpen && <Login handleClose={handleClose} />}
         {isRegisterPopOpen && <Register />}
       </DialogTitle>
     </Dialog>
