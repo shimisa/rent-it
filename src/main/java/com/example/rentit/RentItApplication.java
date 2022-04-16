@@ -46,17 +46,12 @@ public class RentItApplication {
         return args -> {
 
             /* inserting users data into DB for testing */
-//            userService.saveRole(new Role(null, ROLE_USER));
-//            userService.saveRole(new Role(null, ROLE_ADMIN));
 
-            userService.saveUser(new User("Shimi", "Sadaka", "sh.sadaka@gmail.com","1234", ROLE_SUPER_ADMIN));
+            User superAdminUser = new User("Shimi", "Sadaka", "sh.sadaka@gmail.com","1234", ROLE_SUPER_ADMIN);
+            superAdminUser.setEnabled(true);
+            userService.saveUser(superAdminUser);
 
-//            userService.saveUser(new User(null, "Will Smith", "will", "1234", new ArrayList<>()));
-//            userService.saveUser(new User(null, "Jim Carry", "jim", "1234", new ArrayList<>()));
 
-//            userService.addRoleToUser("john", ROLE_USER);
-//            userService.addRoleToUser("will", ROLE_USER);
-//            userService.addRoleToUser("jim", ROLE_ADMIN);
             Set<CarAccessories> carAccessories = Arrays.stream(CarAccessories.values()).collect(Collectors.toSet());
 
             vehicleService.saveVehicle(new SaveVehicleRequest(

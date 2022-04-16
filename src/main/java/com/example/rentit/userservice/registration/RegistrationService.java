@@ -7,6 +7,7 @@ import com.example.rentit.userservice.registration.token.ConfirmationToken;
 import com.example.rentit.userservice.registration.token.ConfirmationTokenService;
 import com.example.rentit.userservice.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class RegistrationService {
     private EmailValidator emailValidator;
     private UserService userService;
@@ -63,7 +65,9 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(confirmationToken.getUser().getEmail());
+        String email = confirmationToken.getUser().getEmail();
+        userService.enableUser(email);
+        log.info("Email confirmed: {}", email);
         return "Confirmed";
     }
 
