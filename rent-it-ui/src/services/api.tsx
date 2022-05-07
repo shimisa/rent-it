@@ -1,65 +1,67 @@
+import { CarAccessories } from "../pages/addCar"
+
 export interface AuthUserSuccess {
-  email: string;
-  access_token: string;
-  refresh_token: string;
+  email: string
+  access_token: string
+  refresh_token: string
 }
 
 export interface User {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 export interface Vehicle {
-  licenseNo: number;
-  typeOfVehicle: string;
-  model: string;
-  year: number;
-  gearType: string;
-  engineType: string;
-  description: string;
-  carAccessories: string[];
+  licenseNo: number
+  typeOfVehicle: string
+  model: string
+  year: number
+  gearType: string
+  engineType: string
+  description: string
+  carAccessories: string[]
 }
 
 export interface Post {
-  carAccessories: string[];
-  carDescription: string;
-  description: string;
-  engineType: string;
-  fromDate: string;
-  gearType: string;
-  header: string;
-  model: string;
-  postId: number;
-  postedAt: string;
+  carAccessories: string[]
+  carDescription: string
+  description: string
+  engineType: string
+  fromDate: string
+  gearType: string
+  header: string
+  model: string
+  postId: number
+  postedAt: string
   ratingOfRental: {
-    avg_carAsDescribed: number;
-    avg_communication: number;
-    avg_deliveryTime: number;
-    avg_wouldRecommendToFriend: number;
-    carRental: number;
-    id: number;
-    numOfNegatives: number;
-    numOfNeutrals: number;
-    numOfPositives: number;
-    numOfVotes: number;
-    percentage_positiveFeedback: number;
-  };
-  rentalFirstName: string;
-  tillDate: string;
-  typeOfVehicle: string;
-  year: number;
+    avg_carAsDescribed: number
+    avg_communication: number
+    avg_deliveryTime: number
+    avg_wouldRecommendToFriend: number
+    carRental: number
+    id: number
+    numOfNegatives: number
+    numOfNeutrals: number
+    numOfPositives: number
+    numOfVotes: number
+    percentage_positiveFeedback: number
+  }
+  rentalFirstName: string
+  tillDate: string
+  typeOfVehicle: string
+  year: number
 }
 
 export const encode = (msgDetails: User): string => {
-  const formBody = [];
-  let property: keyof typeof msgDetails;
+  const formBody = []
+  let property: keyof typeof msgDetails
   for (property in msgDetails) {
-    const encodedKey = encodeURIComponent(property);
-    const encodedValue = encodeURIComponent(msgDetails[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
+    const encodedKey = encodeURIComponent(property)
+    const encodedValue = encodeURIComponent(msgDetails[property])
+    formBody.push(encodedKey + "=" + encodedValue)
   }
-  const strFormBody = formBody.join("&");
-  return strFormBody;
-};
+  const strFormBody = formBody.join("&")
+  return strFormBody
+}
 
 export const login = async (msg: string) => {
   try {
@@ -71,13 +73,13 @@ export const login = async (msg: string) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: msg,
-    });
-    const data = await res.json();
-    return data;
+    })
+    const data = await res.json()
+    return data
   } catch (err: any) {
-    return { fail: "Incorect user name or password" };
+    return { fail: "Incorect user name or password" }
   }
-};
+}
 
 export const register = async ({
   firstName,
@@ -86,11 +88,11 @@ export const register = async ({
   password,
   verifiedPassword,
 }: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  verifiedPassword: string;
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  verifiedPassword: string
 }) => {
   const res = await fetch("http://localhost:8080/api/registration", {
     method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -106,9 +108,9 @@ export const register = async ({
       password,
       verifiedPassword,
     }),
-  });
-  return res;
-};
+  })
+  return res
+}
 
 export const registerConfirm = async (token: string) => {
   const res = await fetch(
@@ -121,11 +123,15 @@ export const registerConfirm = async (token: string) => {
         // 'Content-Type': 'application/x-www-form-urlencoded'
       },
     }
-  );
-  return res;
-};
+  )
+  return res
+}
 
-export const getUserCars = async (email: string, page: number, token: string) => {
+export const getUserCars = async (
+  email: string,
+  page: number,
+  token: string
+) => {
   const res = await fetch(
     `http://localhost:8080/api/vehiclesofuser?email=${email}&page=${page}`,
     {
@@ -133,11 +139,25 @@ export const getUserCars = async (email: string, page: number, token: string) =>
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Authorization": "Bearer " + token// access token 
+        Authorization: "Bearer " + token, // access token
         // 'Content-Type': 'application/x-www-form-urlencoded'
       },
     }
-  );
-  const data = await res.json();
-  return data;
-};
+  )
+  const data = await res.json()
+  return data
+}
+
+export const addNewCar = async (data: object, token: string) => {
+  const res = await fetch("http://localhost:8080/api/vehicle/save", {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + token, // access token
+      // 'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: JSON.stringify(data),
+  })
+  return res
+}

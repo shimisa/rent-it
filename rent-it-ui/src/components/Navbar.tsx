@@ -43,6 +43,8 @@ const Navbar = (props: Props) => {
       {user ? (
         <span className={styles.navRightCol}>
           <Button onClick={() => {router.push('/cars')}}>My Cars</Button>
+          <Button onClick={() => {router.push('/addCar')}}>Add Car</Button>
+          <Button onClick={() => {router.push('/myPosts')}}>My Posts</Button>
           <h4>{user.email}</h4>
         </span>
       ) : (

@@ -29,6 +29,10 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> getPosts(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(postService.getAllPosts(page));
     }
+    @GetMapping("/postsbyuser")
+    public ResponseEntity<List<PostResponse>> getPostsByUser(@RequestParam String vehicleOwnerUsername, @RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(postService.getPostsByVehicleOwnerUsername(vehicleOwnerUsername, page));
+    }
 
     @GetMapping("/postbyvehicleid")
     public ResponseEntity<Post> getPostByVehicleId(@RequestParam long vehicleId) {

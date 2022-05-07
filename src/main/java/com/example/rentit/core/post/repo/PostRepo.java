@@ -18,5 +18,5 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     Optional<Post> findPostByVehicleId(long vehicle_id);
     Optional<Post> findPostByVehicleLicenseNo(long vehicle_licenseNo);
     Optional<Post> findPostByVehicleOwnerId(long owner_id);
-    Optional<Post> findPostByVehicleOwnerEmail(String vehicle_owner_email);
+    Page<Post> findPostByVehicleOwnerEmail(String vehicle_owner_email, Pageable pageable);
 }

@@ -10,7 +10,6 @@ const Posts = () => {
     const getPosts = async () => {
       const res = await fetch("http://localhost:8080/api/post/posts?page=0");
       const data = await res.json();
-      console.log(data);
       setPosts(data);
     };
     getPosts();

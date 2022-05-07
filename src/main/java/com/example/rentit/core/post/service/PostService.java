@@ -16,6 +16,6 @@ public interface PostService {
     Post getPostByPostId(long postId);
     Post getPostByVehicleId(long vehicleId);
     Post getPostByVehicleOwnerId(long vehicleOwnerId);
-    Post getPostByVehicleOwnerUsername(String vehicleOwnerUsername);
+    List<PostResponse>  getPostsByVehicleOwnerUsername(String vehicleOwnerUsername, int page);
     List<PostResponse> getAllPosts(int page);
 }

@@ -85,9 +85,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostByVehicleOwnerUsername(String vehicleOwnerUsername) {
+    public List<PostResponse> getPostsByVehicleOwnerUsername(String vehicleOwnerUsername, int page) {
         log.info("Fetching post by vehicle owner username: {}", vehicleOwnerUsername);
-        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername).orElseThrow();
+        Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
+        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername, pageable).stream().map(post -> {
+            RatingOfRental ratingOfRental = ratingOfRentalRepo.findByCarRentalId(post.getVehicle().getOwner().getId()).orElse(new RatingOfRental());
+            return new PostResponse(
+                    post.getPostId(), post.getPostedAt(),
+                    post.getHeader(), post.getDescription(),
+                    post.getFromDate(), post.getTillDate(),
+                    post.getVehicle().getTypeOfVehicle(),
+                    post.getVehicle().getModel(),
+                    post.getVehicle().getYear(),
+                    post.getVehicle().getGearType(),
+                    post.getVehicle().getEngineType(),
+                    post.getVehicle().getDescription(),
+                    post.getVehicle().getCarAccessories(),
+                    post.getVehicle().getOwner().getFirstName(),
+                    ratingOfRental);
+        }).collect(toList());
     }
 
     @Override

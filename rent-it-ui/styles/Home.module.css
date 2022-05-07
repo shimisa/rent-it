@@ -1,5 +1,5 @@
 .layout {
-  background: rgb(155, 155, 155);
+  background: rgb(235, 235, 235);
   width: 80vw;
   padding: 1vw 1vw 1vw 1vw;
   margin: auto;
@@ -23,7 +23,19 @@
 }
 
 .post {
-  background: rgb(56, 103, 125);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.postAdd{
+  margin-right: 1vw;
+  margin-top: 1vw;
+}
+
+.addCarForm {
   display: flex;
   flex-direction: column;
+  width: 40vw;
+  margin: auto;
 }
