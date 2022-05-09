@@ -1,81 +1,88 @@
-import React, { useCallback, useEffect, useState } from "react";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
-import Typography from "@mui/material/Typography";
-import { blue } from "@mui/material/colors";
-import Login from "./Login";
-import Register from "./Register";
+import React, { useCallback, useEffect, useState } from "react"
+import DialogTitle from "@mui/material/DialogTitle"
+import Dialog from "@mui/material/Dialog"
+import Typography from "@mui/material/Typography"
+import { blue } from "@mui/material/colors"
+import Login from "./Login"
+import Register from "./Register"
+import { DialogContent } from "@mui/material"
+import AddPostForm from "./AddPostForm"
 
-const emails = ["username@gmail.com", "user02@gmail.com"];
+const emails = ["username@gmail.com", "user02@gmail.com"]
 
 export interface SimpleDialogProps {
-  isLoginPopOpen: boolean;
-  isRegisterPopOpen: boolean;
-  open: boolean;
-  selectedValue: string;
-  onClose: (value: string) => void;
+  licenseNo?: string
+  isPopOpen: boolean
+  open: boolean
+  selectedValue: string
+  onClose: (value: string) => void
+  type: string
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, selectedValue, open, isLoginPopOpen, isRegisterPopOpen } =
-    props;
+  const { onClose, selectedValue, open, licenseNo, type } = props
 
   const handleClose = useCallback(() => {
-    onClose(selectedValue);
-  }, [onClose, selectedValue]);
+    onClose(selectedValue)
+  }, [onClose, selectedValue])
 
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>
-        {(isLoginPopOpen && "Login") || (isRegisterPopOpen && "Register")}
-        {isLoginPopOpen && <Login handleClose={handleClose} />}
-        {isRegisterPopOpen && <Register  handleClose={handleClose} />}
+        {(type === "Login" && "Login") || (type === "Register" && "Register")}
       </DialogTitle>
+      <DialogContent>
+        {type === "Login" && <Login handleClose={handleClose} />}
+        {type === "Register" && <Register handleClose={handleClose} />}
+        {type === "AddPost" && licenseNo && (
+          <AddPostForm licenseNo={licenseNo} handleClose={handleClose} />
+        )}
+      </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 export interface PopoutProps {
-  isLoginPopOpen: boolean;
-  isRegisterPopOpen: boolean;
-  loginCloseClick: Function;
-  registerCloseClick: Function;
+  licenseNo?: string
+  isPopOpen: boolean
+  closeClick: Function
+  type: string
 }
 
 export default function Popout({
-  loginCloseClick,
-  registerCloseClick,
-  isLoginPopOpen,
-  isRegisterPopOpen,
+  closeClick,
+  isPopOpen,
+  type,
+  licenseNo,
 }: PopoutProps) {
-  const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(emails[1]);
+  const [open, setOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState(emails[1])
 
   const handleClose = useCallback(() => {
-    setOpen(false);
-    loginCloseClick();
-    registerCloseClick();
-  }, [loginCloseClick, registerCloseClick]);
+    setOpen(false)
+    closeClick()
+  }, [closeClick])
 
   useEffect(() => {
     const handleClickOpen = () => {
-      setOpen(true);
-    };
-
-    if (isLoginPopOpen || isRegisterPopOpen) {
-      handleClickOpen();
-    } else {
-      handleClose();
+      setOpen(true)
     }
-  }, [handleClose, isLoginPopOpen, isRegisterPopOpen]);
+
+    if (isPopOpen) {
+      handleClickOpen()
+    } else {
+      handleClose()
+    }
+  }, [handleClose, isPopOpen])
 
   return (
     <SimpleDialog
-      isLoginPopOpen={isLoginPopOpen}
-      isRegisterPopOpen={isRegisterPopOpen}
+      licenseNo={licenseNo}
+      type={type}
+      isPopOpen={isPopOpen}
       selectedValue={selectedValue}
       open={open}
       onClose={handleClose}
     />
-  );
+  )
 }

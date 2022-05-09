@@ -10,7 +10,7 @@ public enum Stars {
     TWO(2),
     THREE(3),
     FOUR(4),
-    FIV(5);
+    FIVE(5);
 
     int val;
     Stars(int val) {

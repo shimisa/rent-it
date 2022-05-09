@@ -39,3 +39,8 @@
   width: 40vw;
   margin: auto;
 }
+
+.DatePicker {
+  display: flex;
+  flex-direction: row;
+}

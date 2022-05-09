@@ -1,9 +1,10 @@
 import { useRouter } from "next/router"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useCallback, useEffect, useState } from "react"
 import { useUser } from "../context/Auth"
 import { getUserCars, Vehicle } from "../services/api"
 import styles from "../../styles/Home.module.css"
 import PostAddIcon from "@mui/icons-material/PostAdd"
+import Popout from "../components/Popout"
 
 type Props = {}
 
@@ -11,6 +12,15 @@ const Cars: FC = (props: Props) => {
   const { user } = useUser()
   const router = useRouter()
   const [cars, setCars] = useState<Vehicle[] | null>(null)
+  const [isAddPostPopOpen, setIsAddPostPopOpen] = useState<boolean>(false)
+
+  const openAddPostDialog = useCallback(() => {
+    setIsAddPostPopOpen(true)
+  }, [])
+
+  const closeAddPostDialog = useCallback(() => {
+    setIsAddPostPopOpen(false)
+  }, [])
 
   useEffect(() => {
     const getCars = async () => {
@@ -34,15 +44,16 @@ const Cars: FC = (props: Props) => {
   return (
     <>
       <h2>cars</h2>
-      {cars?.map((car) => {
+      {cars?.map((car, i) => {
         return (
-          <>
-            <div key={car.licenseNo} className={styles.post}>
+          <div key={i}>
+            <div className={styles.post}>
               <div>
                 <span>
                   <h1> {car.description}</h1>
                 </span>
                 <span>
+                  <p>licenseNo: {car.licenseNo}</p>
                   <p>Model: {car.model}</p>
                   <p>Vehicle type: {car.typeOfVehicle}</p>
                   <p>Engine: {car.engineType}</p>
@@ -63,13 +74,22 @@ const Cars: FC = (props: Props) => {
               </div>
 
               <PostAddIcon
+                onClick={openAddPostDialog}
                 className={styles.postAdd}
                 cursor="pointer"
                 fontSize="large"
               />
             </div>
+            {isAddPostPopOpen && (
+              <Popout
+                licenseNo={car.licenseNo.toString()}
+                closeClick={closeAddPostDialog}
+                isPopOpen={isAddPostPopOpen}
+                type="AddPost"
+              />
+            )}
             <hr />
-          </>
+          </div>
         )
       })}
     </>

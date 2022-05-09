@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Post } from "../services/api";
-import styles from "../../styles/Home.module.css";
+import React, { useEffect, useState } from "react"
+import { getPosts, Post } from "../services/api"
+import styles from "../../styles/Home.module.css"
 
-type Props = {};
+type Props = {}
 
 const Posts = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([])
   useEffect(() => {
-    const getPosts = async () => {
-      const res = await fetch("http://localhost:8080/api/post/posts?page=0");
-      const data = await res.json();
-      setPosts(data);
-    };
-    getPosts();
-  }, []);
+    const callGetPost = async () => {
+      const data = await getPosts()
+      setPosts(data)
+    }
+    callGetPost()
+  }, [])
   return (
     <>
       <h2>posts</h2>
@@ -33,7 +32,12 @@ const Posts = () => {
               <p>
                 Accessories:{" "}
                 {post.carAccessories.map((ac, i) => {
-                  return <span key={i}>{ac}{" ,"}</span>;
+                  return (
+                    <span key={i}>
+                      {ac}
+                      {" ,"}
+                    </span>
+                  )
                 })}
               </p>
             </span>
@@ -44,10 +48,10 @@ const Posts = () => {
               </p>
             </span>
           </div>
-        );
+        )
       })}
     </>
-  );
-};
+  )
+}
 
-export default Posts;
+export default Posts

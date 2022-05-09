@@ -1,6 +1,7 @@
 package com.example.rentit.core.order.domain;
 
 import com.example.rentit.core.post.domain.Post;
+import com.example.rentit.userservice.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,12 +30,18 @@ public class Order {
     LocalDateTime orderRequestDate = LocalDateTime.now();
     boolean valid = true;
     boolean confirmed = false;
-    boolean cancelledByRenter = false;
-    boolean cancelledByRental = false;
     boolean declined = false;
-    boolean executed = false;
+
+    @ManyToOne
+    @JoinColumn(name = "ordered_by_id")
+    User orderedBy;
 
     @ManyToOne
     @JoinColumn(name = "post_post_id")
     Post post;
+
+    public Order(User orderedBy, Post post) {
+        this.orderedBy = orderedBy;
+        this.post = post;
+    }
 }
