@@ -63,6 +63,20 @@ const Navbar = (props: Props) => {
           >
             My Posts
           </Button>
+          <Button
+            onClick={() => {
+              router.push("/myOrders")
+            }}
+          >
+            My Orders
+          </Button>
+          <Button
+            onClick={() => {
+              router.push("/myOffers")
+            }}
+          >
+            My Offers
+          </Button>
           <h4>{user.email}</h4>
         </span>
       ) : (

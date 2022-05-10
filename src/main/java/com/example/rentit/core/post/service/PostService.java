@@ -18,4 +18,5 @@ public interface PostService {
     Post getPostByVehicleOwnerId(long vehicleOwnerId);
     List<PostResponse>  getPostsByVehicleOwnerUsername(String vehicleOwnerUsername, int page);
     List<PostResponse> getAllPosts(int page);
+    PostResponse postToPostResponse(Post post);
 }

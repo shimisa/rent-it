@@ -1,7 +1,9 @@
 package com.example.rentit.core.order.service;
 
+import com.example.rentit.core.order.domain.OfferResponse;
 import com.example.rentit.core.order.domain.Order;
 import com.example.rentit.core.order.domain.OrderRequest;
+import com.example.rentit.core.order.domain.OrderResponse;
 
 import java.util.List;
 
@@ -11,8 +13,8 @@ import java.util.List;
  * @since 5/8/2022
  */
 public interface OrderService {
-    List<Order> getUserOrders(String email, int page);
-    List<Order> getUserOffers(String email, int page);
+    List<OrderResponse> getUserOrders(String email, int page);
+    List<OfferResponse> getUserOffers(String email, int page);
     Order placeOrder(OrderRequest orderRequest);
     Order declineOrder(Long orderId);
     Order confirmOrder(Long orderId);

@@ -88,44 +88,31 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> getPostsByVehicleOwnerUsername(String vehicleOwnerUsername, int page) {
         log.info("Fetching post by vehicle owner username: {}", vehicleOwnerUsername);
         Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
-        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername, pageable).stream().map(post -> {
-            RatingOfRental ratingOfRental = ratingOfRentalRepo.findByCarRentalId(post.getVehicle().getOwner().getId()).orElse(new RatingOfRental());
-            return new PostResponse(
-                    post.getPostId(), post.getPostedAt(),
-                    post.getHeader(), post.getDescription(),
-                    post.getFromDate(), post.getTillDate(),
-                    post.getVehicle().getTypeOfVehicle(),
-                    post.getVehicle().getModel(),
-                    post.getVehicle().getYear(),
-                    post.getVehicle().getGearType(),
-                    post.getVehicle().getEngineType(),
-                    post.getVehicle().getDescription(),
-                    post.getVehicle().getCarAccessories(),
-                    post.getVehicle().getOwner().getFirstName(),
-                    ratingOfRental);
-        }).collect(toList());
+        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername, pageable).stream().map(this::postToPostResponse).collect(toList());
     }
 
     @Override
     public List<PostResponse> getAllPosts(int page) {
         log.info("Fetching all posts from page {}", page);
         Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
-        return postRepo.findAll(pageable).getContent().stream().map(post -> {
-            RatingOfRental ratingOfRental = ratingOfRentalRepo.findByCarRentalId(post.getVehicle().getOwner().getId()).orElse(new RatingOfRental());
-            return new PostResponse(
-                    post.getPostId(), post.getPostedAt(),
-                    post.getHeader(), post.getDescription(),
-                    post.getFromDate(), post.getTillDate(),
-                    post.getVehicle().getTypeOfVehicle(),
-                    post.getVehicle().getModel(),
-                    post.getVehicle().getYear(),
-                    post.getVehicle().getGearType(),
-                    post.getVehicle().getEngineType(),
-                    post.getVehicle().getDescription(),
-                    post.getVehicle().getCarAccessories(),
-                    post.getVehicle().getOwner().getFirstName(),
-                    ratingOfRental);
-        }).collect(toList());
+        return postRepo.findAll(pageable).getContent().stream().map(this::postToPostResponse).collect(toList());
+    }
+
+    public PostResponse postToPostResponse(Post post) {
+        RatingOfRental ratingOfRental = ratingOfRentalRepo.findByCarRentalId(post.getVehicle().getOwner().getId()).orElse(new RatingOfRental());
+        return new PostResponse(
+                post.getPostId(), post.getPostedAt(),
+                post.getHeader(), post.getDescription(),
+                post.getFromDate(), post.getTillDate(),
+                post.getVehicle().getTypeOfVehicle(),
+                post.getVehicle().getModel(),
+                post.getVehicle().getYear(),
+                post.getVehicle().getGearType(),
+                post.getVehicle().getEngineType(),
+                post.getVehicle().getDescription(),
+                post.getVehicle().getCarAccessories(),
+                post.getVehicle().getOwner().getFirstName(),
+                ratingOfRental);
     }
 
 

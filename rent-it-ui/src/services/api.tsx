@@ -176,9 +176,76 @@ export const addNewPost = async (data: object, token: string) => {
   return res
 }
 
+export const addOrder = async (data: object, token: string) => {
+  const res = await fetch("http://localhost:8080/api/order/placeorder", {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + token, // access token
+      // 'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: JSON.stringify(data),
+  })
+  return res
+}
+
 export const getPosts = async () => {
   try {
     const res = await fetch("http://localhost:8080/api/post/posts?page=0")
+    const data = await res.json()
+    return data
+  } catch (error) {
+    alert("cant get posts")
+  }
+}
+export const getUserOrders = async ({
+  email,
+  token,
+}: {
+  token: string
+  email: string
+}) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/order/getuserorders?email=${email}&page=${0}`,
+      {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token, // access token
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    )
+    const data = await res.json()
+    return data
+  } catch (error) {
+    alert("cant get posts")
+  }
+}
+
+export const getUserOffers = async ({
+  email,
+  token,
+}: {
+  token: string
+  email: string
+}) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/order/getuseroffers?email=${email}&page=${0}`,
+      {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token, // access token
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    )
     const data = await res.json()
     return data
   } catch (error) {

@@ -1,7 +1,9 @@
 package com.example.rentit.api;
 
+import com.example.rentit.core.order.domain.OfferResponse;
 import com.example.rentit.core.order.domain.Order;
 import com.example.rentit.core.order.domain.OrderRequest;
+import com.example.rentit.core.order.domain.OrderResponse;
 import com.example.rentit.core.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +27,12 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/getuserorders")
-    public ResponseEntity<List<Order>> getUserOrders(@RequestParam String email, @RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<List<OrderResponse>> getUserOrders(@RequestParam String email, @RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(orderService.getUserOrders(email, page));
     }
 
     @GetMapping("/getuseroffers")
-    public ResponseEntity<List<Order>> getUserOffers(@RequestParam String email, @RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<List<OfferResponse>> getUserOffers(@RequestParam String email, @RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(orderService.getUserOffers(email, page));
     }
 
