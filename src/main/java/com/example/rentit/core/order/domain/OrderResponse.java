@@ -23,8 +23,7 @@ public class OrderResponse {
     private Long orderId;
     LocalDateTime orderRequestDate;
     boolean valid;
-    boolean confirmed;
-    boolean declined;
+    OrderStatus orderStatus;
 
     PostResponse post;
 }

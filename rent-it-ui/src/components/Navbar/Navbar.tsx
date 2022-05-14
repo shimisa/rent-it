@@ -1,10 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
 import React, { useCallback, useState } from "react"
-import styles from "../../styles/Home.module.css"
+import styles from "./Navbar.module.css"
 import { Button, Typography } from "@mui/material"
-import Popout from "./Popout"
-import { useUser } from "../context/Auth"
+import Popout from "../Popout"
+import { UserUpdateContext, useUser } from "../../context/Auth"
 import { useRouter } from "next/router"
 
 type Props = {}
@@ -13,7 +13,7 @@ const Navbar = (props: Props) => {
   const [isLoginPopOpen, setIsLoginPopOpen] = useState<boolean>(false)
   const [isRegisterPopOpen, setIsRegisterPopOpen] = useState<boolean>(false)
   const router = useRouter()
-  const { user } = useUser()
+  const { user, userUpdate } = useUser()
 
   const loginOpenClick = () => {
     setIsLoginPopOpen(true)
@@ -33,7 +33,7 @@ const Navbar = (props: Props) => {
 
   return (
     <div className={styles.navbar}>
-      <div className={styles.navLeftCol}>
+      <div>
         <Link href="/">
           <a>
             <Image src="/favicon.ico" alt="img" width={50} height={50} />
@@ -41,10 +41,10 @@ const Navbar = (props: Props) => {
         </Link>
       </div>
       {user ? (
-        <span className={styles.navRightCol}>
+        <span>
           <Button
             onClick={() => {
-              router.push("/cars")
+              router.push("/myCars")
             }}
           >
             My Cars
@@ -77,10 +77,17 @@ const Navbar = (props: Props) => {
           >
             My Offers
           </Button>
-          <h4>{user.email}</h4>
+          <Button
+            onClick={() => {
+              router.push("/")
+              userUpdate(null)
+            }}
+          >
+            Log Out
+          </Button>
         </span>
       ) : (
-        <div className={styles.navRightCol}>
+        <div>
           <Button onClick={loginOpenClick}>Login</Button>
           <Button onClick={registerOpenClick}>Register</Button>
         </div>

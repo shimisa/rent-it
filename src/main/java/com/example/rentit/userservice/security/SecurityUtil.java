@@ -29,7 +29,7 @@ public class SecurityUtil {
     private static final byte[] secretKey = new byte[10];
     private static final Algorithm algorithm = Algorithm.HMAC256(secretKey);
     public static final String AUTHORIZATION_PREFIX = "Bearer ";
-    public static final int ACCESS_TOKEN_EXP_MILL = 15 * 60 * 1000; // 15 minutes
+    public static final int ACCESS_TOKEN_EXP_MILL = 1 * 10 * 1000; // 15 minutes
     public static final int REFRESH_TOKEN_EXP_MILL = 40 * 60 * 1000; // 40 minutes
 
 

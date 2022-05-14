@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -47,8 +46,8 @@ public class PostServiceImpl implements PostService {
     public Post savePost(PostRequest postRequest) {
         postRepo.findPostByVehicleLicenseNo(postRequest.getLicenseNo()).ifPresent(
                 post -> {
-                    if (post.getPostedAt().plusDays(POST_PERIOD_DAYS).isAfter(LocalDateTime.now())) {
-                        log.error("This car already posted at: {}", post.getPostedAt());
+                    if (post.getTillDate().isBefore(LocalDateTime.now())) {
+                        log.error("This car already posted at: {} and valid till: {}", post.getPostedAt(), post.getTillDate());
                         throw new IllegalStateException("This car already posted" );
                     }
                 }
@@ -65,7 +64,15 @@ public class PostServiceImpl implements PostService {
         );
         return postRepo.save(post);
     }
-    // TODO: to return PostResponse instead of Post
+
+    @Override
+    public void deletePost(Long postId) {
+        log.info("Inactive post id: {}", postId);
+        Post post = postRepo.findPostByPostId(postId).orElseThrow();
+        post.setActive(false);
+        postRepo.save(post);
+    }
+
     @Override
     public Post getPostByPostId(long postId) {
         log.info("Fetching post id: {}", postId);
@@ -88,14 +95,19 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> getPostsByVehicleOwnerUsername(String vehicleOwnerUsername, int page) {
         log.info("Fetching post by vehicle owner username: {}", vehicleOwnerUsername);
         Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
-        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername, pageable).stream().map(this::postToPostResponse).collect(toList());
+        return postRepo.findPostByVehicleOwnerEmail(vehicleOwnerUsername, pageable).stream()
+                .filter(Post::isActive)
+                .map(this::postToPostResponse).collect(toList());
     }
 
     @Override
     public List<PostResponse> getAllPosts(int page) {
         log.info("Fetching all posts from page {}", page);
         Pageable pageable = PageRequest.of(page, MAX_POSTS_PER_PAGE);
-        return postRepo.findAll(pageable).getContent().stream().map(this::postToPostResponse).collect(toList());
+        return postRepo.findAll(pageable).getContent().stream()
+                .filter(Post::isActive)
+                .filter(post -> post.getTillDate().isAfter(LocalDateTime.now()))
+                .map(this::postToPostResponse).collect(toList());
     }
 
     public PostResponse postToPostResponse(Post post) {

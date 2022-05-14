@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Shimi Sadaka
@@ -36,13 +39,20 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle saveVehicle(SaveVehicleRequest saveVehicleRequest) {
-        if (vehicleRepo.findByLicenseNo(saveVehicleRequest.getLicenseNo()).isPresent()) {
-            log.info("Vehicle is already exists. LicenseNo: {}", saveVehicleRequest.getLicenseNo());
+        Optional<Vehicle> vehicleOptional = vehicleRepo.findByLicenseNo(saveVehicleRequest.getLicenseNo());
+        Vehicle vehicle = null;
+        if (vehicleOptional.isPresent()) {
+            vehicle = vehicleOptional.get();
+            if (!vehicle.isActive()) {  // if present and not active -> make it active
+                vehicle.setActive(true);
+                return vehicleRepo.save(vehicle);
+            }
+            log.warn("Vehicle is already exists and active. LicenseNo: {}", saveVehicleRequest.getLicenseNo());
             throw new IllegalStateException("Vehicle is already exists. LicenseNo: " + saveVehicleRequest.getLicenseNo());
         }
         User vehicleOwner =  userRepo.findByEmail(saveVehicleRequest.getOwnerUserName()).orElseThrow(() ->
                 new IllegalStateException("User owner vehicle is not exists"));
-        Vehicle vehicle = new Vehicle(
+        vehicle = new Vehicle(
                 saveVehicleRequest.getLicenseNo(),
                 saveVehicleRequest.getTypeOfVehicle(),
                 saveVehicleRequest.getModel(),
@@ -56,6 +66,14 @@ public class VehicleServiceImpl implements VehicleService {
         log.info("Saving new vehicle to the database: " +
                 "\n Type: {} LicenseNo: {}", saveVehicleRequest.getLicenseNo(), saveVehicleRequest.getLicenseNo());
         return vehicleRepo.save(vehicle);
+    }
+
+    @Override
+    public void deleteVehicle(Long vehicleId) {
+        log.info("Inactive Vehicle id: {}", vehicleId);
+        Vehicle vehicle = vehicleRepo.findById(vehicleId).orElseThrow();
+        vehicle.setActive(false);
+        vehicleRepo.save(vehicle);
     }
 
     @Override
@@ -108,6 +126,7 @@ public class VehicleServiceImpl implements VehicleService {
     public List<Vehicle> getVehiclesByOwnerEmail(String email, int page) {
         log.info("Fetching vehicle by Owner Email from page {}", page);
         Pageable pageable = PageRequest.of(page, MAX_VEHICLES_PER_PAGE);
-        return vehicleRepo.findByOwnerEmail(email, pageable).getContent();
+        return vehicleRepo.findByOwnerEmail(email, pageable).stream()
+                .filter(Vehicle::isActive).collect(toList());
     }
 }

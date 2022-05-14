@@ -1,9 +1,6 @@
 package com.example.rentit.core.order.service;
 
-import com.example.rentit.core.order.domain.OfferResponse;
-import com.example.rentit.core.order.domain.Order;
-import com.example.rentit.core.order.domain.OrderRequest;
-import com.example.rentit.core.order.domain.OrderResponse;
+import com.example.rentit.core.order.domain.*;
 import com.example.rentit.core.order.repo.OrderRepo;
 import com.example.rentit.core.post.domain.Post;
 import com.example.rentit.core.post.repo.PostRepo;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.example.rentit.core.order.domain.OrderStatus.*;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -56,8 +54,7 @@ public class OrderServiceImpl implements OrderService{
                 order.getOrderId(),
                 order.getOrderRequestDate(),
                 order.isValid(),
-                order.isConfirmed(),
-                order.isDeclined(),
+                order.getOrderStatus(),
                 order.getPost().getVehicle().getLicenseNo(),
                 postService.postToPostResponse(order.getPost())
         );
@@ -68,8 +65,7 @@ public class OrderServiceImpl implements OrderService{
                 order.getOrderId(),
                 order.getOrderRequestDate(),
                 order.isValid(),
-                order.isConfirmed(),
-                order.isDeclined(),
+                order.getOrderStatus(),
                 postService.postToPostResponse(order.getPost())
         );
     }
@@ -84,20 +80,28 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order declineOrder(Long orderId) {
-        log.info("Declining order: {}", orderId);
+    public Order updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        log.info("Update status of order: {} to Status: {}", orderId, orderStatus);
         Order order = orderRepo.findOrderByOrderId(orderId).orElseThrow();
-        order.setDeclined(true);
+        order.setOrderStatus(orderStatus);
         return orderRepo.save(order);
     }
-
-    @Override
-    public Order confirmOrder(Long orderId) {
-        log.info("Confirming order: {}", orderId);
-        Order order = orderRepo.findOrderByOrderId(orderId).orElseThrow();
-        order.setConfirmed(true);
-        return orderRepo.save(order);
-    }
+//
+//    @Override
+//    public Order cancelOrder(Long orderId) {
+//        log.info("Canceling order: {}", orderId);
+//        Order order = orderRepo.findOrderByOrderId(orderId).orElseThrow();
+//        order.setOrderStatus(CANCELED);
+//        return orderRepo.save(order);
+//    }
+//
+//    @Override
+//    public Order confirmOrder(Long orderId) {
+//        log.info("Confirming order: {}", orderId);
+//        Order order = orderRepo.findOrderByOrderId(orderId).orElseThrow();
+//        order.setOrderStatus(CONFIRMED);
+//        return orderRepo.save(order);
+//    }
 
 
 }

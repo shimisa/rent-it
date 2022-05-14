@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface VehicleService {
     Vehicle saveVehicle(SaveVehicleRequest saveVehicleRequest);
+    void deleteVehicle(Long vehicleId);
     void setAccessoriesToVehicle(long id, Collection<CarAccessories> carAccessories);
     Vehicle getVehicleById(long id);
     Vehicle getVehicleByLicenseNo(long licenseNo);

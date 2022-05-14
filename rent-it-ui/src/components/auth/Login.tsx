@@ -1,13 +1,13 @@
 import React, { memo, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import styles from "../../styles/Home.module.css";
+import styles from "./Auth.module.css";
 import { Button } from "@mui/material";
 import {
   encode,
   login,
   AuthUserSuccess,
-} from "../services/api";
-import { useUser } from "../context/Auth";
+} from "../../services/api";
+import { useUser } from "../../context/Auth";
 
 type Props = {
   handleClose: Function;
@@ -45,7 +45,7 @@ const Login = ({ handleClose }: Props) => {
   }, [handleClose, user, userUpdate]);
 
   return (
-    <div className={styles.popoutForm}>
+    <div className={styles.authform}>
       <TextField
         value={email}
         onChange={(e) => {

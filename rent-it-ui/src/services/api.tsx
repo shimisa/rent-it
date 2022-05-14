@@ -1,5 +1,3 @@
-import { CarAccessories } from "../pages/addCar"
-
 export interface AuthUserSuccess {
   email: string
   access_token: string
@@ -11,6 +9,7 @@ export interface User {
   password: string
 }
 export interface Vehicle {
+  id: number
   licenseNo: number
   typeOfVehicle: string
   model: string
@@ -49,6 +48,22 @@ export interface Post {
   tillDate: string
   typeOfVehicle: string
   year: number
+}
+
+export const refresh = async (token: string) => {
+  const res = await fetch("http://localhost:8080/api/token/refresh", {
+    method: "GET", // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: "Bearer " + token, // access token
+      // 'Content-Type': 'application/x-www-form-urlencoded'
+    },
+  })
+  if (res.status === 200) {
+    const data = await res.json()
+    return data
+  }
 }
 
 export const encode = (msgDetails: User): string => {
@@ -195,9 +210,7 @@ export const getPosts = async () => {
     const res = await fetch("http://localhost:8080/api/post/posts?page=0")
     const data = await res.json()
     return data
-  } catch (error) {
-    alert("cant get posts")
-  }
+  } catch (error) {}
 }
 export const getUserOrders = async ({
   email,
@@ -221,9 +234,7 @@ export const getUserOrders = async ({
     )
     const data = await res.json()
     return data
-  } catch (error) {
-    alert("cant get posts")
-  }
+  } catch (error) {}
 }
 
 export const getUserOffers = async ({
@@ -248,7 +259,85 @@ export const getUserOffers = async ({
     )
     const data = await res.json()
     return data
+  } catch (error) {}
+}
+
+export const updateOrderStatus = async ({
+  token,
+  orderId,
+  status,
+}: {
+  token: string
+  orderId: number
+  status: string
+}) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/order/updateorderstatus?orderId=${orderId}&orderStatus=${status}`,
+      {
+        method: "PUT", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token, // access token
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    )
+    return res.status
   } catch (error) {
-    alert("cant get posts")
+    return 401
+  }
+}
+
+export const deleteCar = async ({
+  token,
+  vehicleId,
+}: {
+  token: string
+  vehicleId: number
+}) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/deletevehicle?vehicleId=${vehicleId}`,
+      {
+        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token, // access token
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    )
+    return res.status
+  } catch (error) {
+    return 401
+  }
+}
+
+export const deletePost = async ({
+  token,
+  postId,
+}: {
+  token: string
+  postId: number
+}) => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/post/deletepost?postId=${postId}`,
+      {
+        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token, // access token
+          // 'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      }
+    )
+    return res.status
+  } catch (error) {
+    return 401
   }
 }

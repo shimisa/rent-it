@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import styles from "../../styles/Home.module.css";
+import styles from "./Auth.module.css";
 import { Button } from "@mui/material";
-import { register, registerConfirm } from "../services/api";
+import { register, registerConfirm } from "../../services/api";
 
 type Props = {
   handleClose: Function;
@@ -51,7 +51,7 @@ const Register = ({ handleClose }: Props) => {
   };
 
   return (
-    <div className={styles.popoutForm}>
+    <div className={styles.authform}>
       <TextField
         value={firstName}
         onChange={(e) => {

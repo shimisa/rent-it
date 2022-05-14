@@ -1,9 +1,6 @@
 package com.example.rentit.api;
 
-import com.example.rentit.core.order.domain.OfferResponse;
-import com.example.rentit.core.order.domain.Order;
-import com.example.rentit.core.order.domain.OrderRequest;
-import com.example.rentit.core.order.domain.OrderResponse;
+import com.example.rentit.core.order.domain.*;
 import com.example.rentit.core.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +41,19 @@ public class OrderController {
     }
 
 
-    @PutMapping("/declineorder")
-    public ResponseEntity<Order> declineOrder(@RequestBody Long orderId) {
-        return ResponseEntity.ok().body(orderService.declineOrder(orderId));
+    @PutMapping("/updateorderstatus")
+    public ResponseEntity<Order> declineOffer(@RequestParam Long orderId, @RequestParam OrderStatus orderStatus) {
+        return ResponseEntity.ok().body(orderService.updateOrderStatus(orderId, orderStatus));
     }
 
-    @PutMapping("/confirmorder")
-    public ResponseEntity<Order> confirmOrder(@RequestBody Long orderId) {
-        return ResponseEntity.ok().body(orderService.confirmOrder(orderId));
-    }
+//    @PutMapping("/cancelorder")
+//    public ResponseEntity<Order> cancelOrder(@RequestBody Long orderId) {
+//        return ResponseEntity.ok().body(orderService.declineOffer(orderId));
+//    }
+//
+//    @PutMapping("/confirmorder")
+//    public ResponseEntity<Order> confirmOrder(@RequestBody Long orderId) {
+//        return ResponseEntity.ok().body(orderService.confirmOrder(orderId));
+//    }
 
 }

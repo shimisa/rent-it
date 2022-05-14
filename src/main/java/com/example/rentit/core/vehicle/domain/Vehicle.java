@@ -27,6 +27,7 @@ public class Vehicle {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private Long licenseNo;
+    private boolean active = true;
 
     @Enumerated(EnumType.STRING)
     private TypeOfVehicle typeOfVehicle;

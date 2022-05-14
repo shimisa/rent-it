@@ -19,8 +19,7 @@ public class OfferResponse {
     private Long orderId;
     LocalDateTime orderRequestDate;
     boolean valid;
-    boolean confirmed;
-    boolean declined;
+    OrderStatus orderStatus;
 
     Long vehicleLicenseNo;
     PostResponse post;

@@ -28,9 +28,8 @@ public class Order {
     private Long orderId;
 
     LocalDateTime orderRequestDate = LocalDateTime.now();
+    OrderStatus orderStatus = OrderStatus.PENDING;
     boolean valid = true;
-    boolean confirmed = false;
-    boolean declined = false;
 
     @ManyToOne
     @JoinColumn(name = "ordered_by_id")

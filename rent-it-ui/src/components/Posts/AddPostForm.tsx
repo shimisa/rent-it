@@ -1,10 +1,10 @@
 import { Button, Container, Grid, TextField, Typography } from "@mui/material"
 import React, { useCallback } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
-import { useUser } from "../context/Auth"
-import { addNewPost } from "../services/api"
-import TextArea from "../components/TextArea"
-import DatePicker from "../components/DatePicker"
+import { useUser } from "../../context/Auth"
+import { addNewPost } from "../../services/api"
+import TextArea from "../TextArea"
+import DatePicker from "../DatePicker"
 
 type Props = {
   handleClose: Function
@@ -54,7 +54,6 @@ const AddPostForm = ({ licenseNo, handleClose }: Props) => {
         },
         user!.access_token
       )
-      alert(res.status)
       console.log("New post created successfully")
       // router.push(`/offers/${createNewPost.data.createPost!.id}`)
     } catch (error) {

@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from "react"
-import { getUserOffers } from "../services/api"
+import { getUserOffers, updateOrderStatus } from "../services/api"
 import { useUser } from "../context/Auth"
+import { Button } from "@mui/material"
+import { useRouter } from "next/router"
 
 type Props = {}
 
@@ -8,8 +10,7 @@ type Offer = {
   orderId: number
   orderRequestDate: string
   valid: boolean
-  confirmed: boolean
-  declined: boolean
+  orderStatus: "PENDING" | "COFIRMED" | "DECLINED" | "CANCELED"
   vehicleLicenseNo: number
   post: {
     postId: number
@@ -31,8 +32,17 @@ type Offer = {
 }
 
 const MyOffers: FC = (props: Props) => {
+  const [forceRender, setForceRender] = useState<boolean>(true)
   const [offers, setoffers] = useState<Offer[]>()
   const { user } = useUser()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!user) {
+      router?.push("/")
+    }
+  }, [router, user])
+
   useEffect(() => {
     const callGetUserOffers = async () => {
       if (user) {
@@ -49,7 +59,18 @@ const MyOffers: FC = (props: Props) => {
       }
     }
     callGetUserOffers()
-  }, [user])
+  }, [user, forceRender])
+
+  const callDeclineOffer = async (orderId: number) => {
+    const res = await updateOrderStatus({
+      status: "DECLINED",
+      orderId,
+      token: user!.access_token,
+    })
+    if (res === 200) {
+      setForceRender((p) => !p)
+    }
+  }
 
   return (
     <div>
@@ -58,9 +79,17 @@ const MyOffers: FC = (props: Props) => {
           <>
             <b>Order ID: {offer.orderId}</b>
             <p>Vehicle LicenseNo: {offer.vehicleLicenseNo}</p>
-            <p>Requested Date: {new Date(offer.orderRequestDate).toLocaleDateString()}</p>
-            <p>The Order is {offer.confirmed ? "confirmed" : "not confirmed"}</p>
-            <hr/>
+            <p>
+              Requested Date:{" "}
+              {new Date(offer.orderRequestDate).toLocaleDateString()}
+            </p>
+            <p>The Order is {offer.orderStatus}</p>
+            {offer.orderStatus === "PENDING" && (
+              <Button onClick={() => callDeclineOffer(offer.orderId)}>
+                Decline
+              </Button>
+            )}
+            <hr />
           </>
         )
       })}

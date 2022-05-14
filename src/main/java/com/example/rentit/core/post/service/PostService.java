@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface PostService {
     Post savePost(PostRequest postRequest);
+    void deletePost(Long postId);
     Post getPostByPostId(long postId);
     Post getPostByVehicleId(long vehicleId);
     Post getPostByVehicleOwnerId(long vehicleOwnerId);

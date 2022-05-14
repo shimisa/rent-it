@@ -1,0 +1,14 @@
+.authform {
+    display: flex;
+    flex-direction: column;
+    font-style: italic;
+}
+
+.authform label{
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.authform input{
+    margin-top: 10px;
+}

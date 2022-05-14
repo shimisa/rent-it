@@ -47,6 +47,12 @@ public class VehicleResource {
         vehicleService.setAccessoriesToVehicle(accessoriesToVehicle.getId(), accessoriesToVehicle.getCarAccessories());
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/deletevehicle")
+    public ResponseEntity<?> deleteVehicle(@RequestParam String vehicleId) {
+        vehicleService.deleteVehicle(Long.parseLong(vehicleId));
+        return ResponseEntity.ok().build();
+    }
 }
 
 @Data

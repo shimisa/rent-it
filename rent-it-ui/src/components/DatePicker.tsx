@@ -42,7 +42,7 @@ export default function BasicDatePicker({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <div className={styles.DatePicker}>
+      <div>
         <DatePicker
           label="From"
           value={from}

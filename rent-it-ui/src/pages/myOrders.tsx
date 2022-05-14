@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from "react"
-import { getUserOrders } from "../services/api"
+import { getUserOrders, updateOrderStatus } from "../services/api"
 import { useUser } from "../context/Auth"
+import { Button } from "@mui/material"
+import { useRouter } from "next/router"
 
 type Props = {}
 
@@ -8,8 +10,7 @@ type Order = {
   orderId: number
   orderRequestDate: string
   valid: boolean
-  confirmed: boolean
-  declined: boolean
+  orderStatus: "PENDING" | "COFIRMED" | "DECLINED" | "CANCELED"
   post: {
     postId: number
     postedAt: string
@@ -31,7 +32,10 @@ type Order = {
 
 const MyOrders: FC = (props: Props) => {
   const [orders, setOrders] = useState<Order[]>()
+  const [forceRender, setForceRender] = useState<boolean>(true)
   const { user } = useUser()
+  const router = useRouter()
+
   useEffect(() => {
     const callGetUserOrders = async () => {
       if (user) {
@@ -47,7 +51,24 @@ const MyOrders: FC = (props: Props) => {
       }
     }
     callGetUserOrders()
-  }, [user])
+  }, [user, forceRender])
+
+  useEffect(() => {
+    if (!user) {
+      router?.push("/")
+    }
+  }, [router, user])
+
+  const callCancelOrder = async (orderId: number) => {
+    const res = await updateOrderStatus({
+      status: "CANCELED",
+      orderId,
+      token: user!.access_token,
+    })
+    if (res === 200) {
+      setForceRender((p) => !p)
+    }
+  }
 
   return (
     <div>
@@ -55,9 +76,17 @@ const MyOrders: FC = (props: Props) => {
         return (
           <>
             <b>Order ID: {order.orderId}</b>
-            <p>Requested Date: {new Date(order.orderRequestDate).toLocaleDateString()}</p>
-            <p>The Order is {order.confirmed ? "confirmed" : "not confirmed"}</p>
-            <hr/>
+            <p>
+              Requested Date:{" "}
+              {new Date(order.orderRequestDate).toLocaleDateString()}
+            </p>
+            <p>The Order is {order.orderStatus}</p>
+            {order.orderStatus === "PENDING" && (
+              <Button onClick={() => callCancelOrder(order.orderId)}>
+                CANCEL
+              </Button>
+            )}
+            <hr />
           </>
         )
       })}

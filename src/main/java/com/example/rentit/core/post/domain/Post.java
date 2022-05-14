@@ -25,6 +25,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long postId;
+    boolean active = true;
     private LocalDateTime postedAt = LocalDateTime.now();
 
     @Column(length = 20)

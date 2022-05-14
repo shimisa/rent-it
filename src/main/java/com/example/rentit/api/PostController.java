@@ -44,4 +44,10 @@ public class PostController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/post/post").toString());
         return ResponseEntity.created(uri).body(postService.savePost(postRequest));
     }
+
+    @DeleteMapping("/deletepost")
+    public ResponseEntity<?> deletePost(@RequestParam String postId) {
+        postService.deletePost(Long.parseLong(postId));
+        return ResponseEntity.ok().build();
+    }
 }
